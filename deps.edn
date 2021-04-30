@@ -1,0 +1,39 @@
+{:paths ["src" "resources"]
+ :deps {org.clojure/clojure {:mvn/version "1.10.3"}
+        org.clojure/data.zip {:mvn/version "1.0.0"}}
+ :aliases
+ {:mvn/group-id com.fluree
+  :mvn/artifact-id tools-cli-pom2project
+  :mvn/version "0.1.0"
+
+  :test
+  {:extra-paths ["test"]
+   :extra-deps {org.clojure/test.check {:mvn/version "1.1.0"}}}
+
+  :runner
+  {:extra-deps {com.cognitect/test-runner
+                {:git/url "https://github.com/cognitect-labs/test-runner"
+                 :sha "b6b3193fcc42659d7e46ecd1884a228993441182"}}
+   :main-opts ["-m" "cognitect.test-runner"
+               "-d" "test"]}
+
+  :jar {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.0.216"}}
+        :exec-fn      hf.depstar/jar
+        :exec-args    {:jar         "target/tools-cli-pom2project.jar"
+                       :group-id    :mvn/group-id
+                       :artifact-id :mvn/artifact-id
+                       :version     :mvn/version
+                       :sync-pom    true}}
+
+  :install
+  {:extra-deps {slipset/deps-deploy {:mvn/version "0.1.5"}}
+   :exec-fn deps-deploy.deps-deploy/deploy
+   :exec-args {:installer :local}
+   :artifact "target/tools-cli-pom2project.jar"}
+
+  :deploy
+  {:extra-deps {slipset/deps-deploy {:mvn/version "0.1.5"}}
+   :exec-fn deps-deploy.deps-deploy/deploy
+   :exec-args {:installer :remote}
+   :sign-releases? true
+   :artifact "target/tools-cli-pom2project.jar"}}}
