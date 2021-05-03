@@ -6,6 +6,8 @@
   :mvn/artifact-id tools-cli-pom2project
   :mvn/version "0.1.0"
 
+  :jar/file-name "target/tools-cli-pom2project.jar"
+
   :test
   {:extra-paths ["test"]
    :extra-deps {org.clojure/test.check {:mvn/version "1.1.0"}}}
@@ -19,21 +21,22 @@
 
   :jar {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.0.216"}}
         :exec-fn      hf.depstar/jar
-        :exec-args    {:jar         "target/tools-cli-pom2project.jar"
+        :exec-args    {:jar         :jar/file-name
                        :group-id    :mvn/group-id
                        :artifact-id :mvn/artifact-id
                        :version     :mvn/version
                        :sync-pom    true}}
 
   :install
-  {:extra-deps {slipset/deps-deploy {:mvn/version "0.1.5"}}
+  {:extra-deps {slipset/deps-deploy {:git/url "https://github.com/slipset/deps-deploy.git"
+                                     :sha "b4359c5d67ca002d9ed0c4b41b710d7e5a82e3bf"}}
    :exec-fn deps-deploy.deps-deploy/deploy
-   :exec-args {:installer :local}
-   :artifact "target/tools-cli-pom2project.jar"}
+   :exec-args {:installer :local
+               :artifact  :jar/file-name}}
 
   :deploy
-  {:extra-deps {slipset/deps-deploy {:mvn/version "0.1.5"}}
+  {:extra-deps {slipset/deps-deploy {:git/url "https://github.com/slipset/deps-deploy.git"
+                                     :sha "b4359c5d67ca002d9ed0c4b41b710d7e5a82e3bf"}}
    :exec-fn deps-deploy.deps-deploy/deploy
-   :exec-args {:installer :remote}
-   :sign-releases? true
-   :artifact "target/tools-cli-pom2project.jar"}}}
+   :exec-args {:installer :remote
+               :artifact  :jar/file-name}}}}
